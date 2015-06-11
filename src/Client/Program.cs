@@ -77,10 +77,6 @@
                         case "2":
                             requestAddress = "http://i.imgur.com/NK8eZUe.jpg";
                             break;
-                        case "3":
-                            requestAddress =
-                                "http://ndhaxpgit01.mckesson.com/chrispatterson/Schemacina/raw/master/README.markdown";
-                            break;
                     }
 
                     Uri requestUri;
