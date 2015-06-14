@@ -31,6 +31,9 @@
     <level value=""INFO"" />
     <appender-ref ref=""console"" />
   </root>
+  <logger name=""NHibernate"">
+    <level value=""ERROR"" />
+  </logger>
   <appender name=""console"" type=""log4net.Appender.ColoredConsoleAppender"">
     <layout type=""log4net.Layout.PatternLayout"">
       <conversionPattern value=""%m%n"" />

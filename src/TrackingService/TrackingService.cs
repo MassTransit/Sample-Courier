@@ -65,8 +65,8 @@
 
                 x.ReceiveEndpoint(host, "routing_slip_state", e =>
                 {
-                    e.PrefetchCount = 10;
-
+                    e.PrefetchCount = 8;
+                    e.UseConcurrencyLimit(1);
                     e.StateMachineSaga(_machine, _repository);
                 });
             });
