@@ -49,6 +49,6 @@
         /// <summary>
         /// This maps to the tracking number of the routing slip
         /// </summary>
-        public Guid CorrelationId { get; private set; }
+        public Guid CorrelationId { get; set; }
     }
 }

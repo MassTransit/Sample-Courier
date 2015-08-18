@@ -52,14 +52,14 @@
                 x.ReceiveEndpoint(host, "routing_slip_metrics", e =>
                 {
                     e.PrefetchCount = 100;
-                    e.Retry(Retry.None);
+                    e.UseRetry(Retry.None);
                     e.Consumer(() => new RoutingSlipMetricsConsumer(_metrics));
                 });
 
                 x.ReceiveEndpoint(host, "routing_slip_activity_metrics", e =>
                 {
                     e.PrefetchCount = 100;
-                    e.Retry(Retry.None);
+                    e.UseRetry(Retry.None);
                     e.Consumer(() => new RoutingSlipActivityConsumer(_activityMetrics, "Validate"));
                 });
 
