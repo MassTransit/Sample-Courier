@@ -3,10 +3,13 @@
     using System;
     using System.Configuration;
     using System.Threading;
+    using CourierSample;
     using MassTransit;
+    using MassTransit.AzureServiceBusTransport;
     using MassTransit.Courier;
     using MassTransit.Courier.Factories;
-    using MassTransit.RabbitMqTransport;
+    using Microsoft.ServiceBus;
+    using Microsoft.ServiceBus.Messaging;
     using Processing.Activities.Retrieve;
     using Processing.Activities.Validate;
     using Topshelf;
@@ -32,12 +35,22 @@
 
             _log.Info("Creating bus...");
 
-            _busControl = Bus.Factory.CreateUsingRabbitMq(x =>
+            _busControl = Bus.Factory.CreateUsingAzureServiceBus(x =>
             {
-                IRabbitMqHost host = x.Host(new Uri(ConfigurationManager.AppSettings["RabbitMQHost"]), h =>
+                var serviceUri = ServiceBusEnvironment.CreateServiceUri("sb",
+                    ConfigurationManager.AppSettings["ServiceBusNamespace"], "ActivityService");
+
+                IServiceBusHost host = x.Host(serviceUri, h =>
                 {
-                    h.Username("guest");
-                    h.Password("guest");
+                    ServiceBusTokenProviderSettings settings = new ServiceBusAccountSettings();
+
+                    h.SharedAccessSignature(s =>
+                    {
+                        s.KeyName = settings.KeyName;
+                        s.SharedAccessKey = settings.SharedAccessKey;
+                        s.TokenTimeToLive = settings.TokenTimeToLive;
+                        s.TokenScope = settings.TokenScope;
+                    });
                 });
 
                 x.ReceiveEndpoint(host, ConfigurationManager.AppSettings["ValidateActivityQueue"], e =>
@@ -49,7 +62,7 @@
 
                 string compQueue = ConfigurationManager.AppSettings["CompensateRetrieveActivityQueue"];
 
-                Uri compAddress = host.Settings.GetQueueAddress(compQueue);
+                Uri compAddress = host.Settings.GetInputAddress(new QueueDescription(compQueue));
 
                 x.ReceiveEndpoint(host, ConfigurationManager.AppSettings["RetrieveActivityQueue"], e =>
                 {

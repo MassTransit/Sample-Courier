@@ -28,7 +28,7 @@
             const string logConfig = @"<?xml version=""1.0"" encoding=""utf-8"" ?>
 <log4net>
   <root>
-    <level value=""INFO"" />
+    <level value=""DEBUG"" />
     <appender-ref ref=""console"" />
   </root>
   <logger name=""NHibernate"">

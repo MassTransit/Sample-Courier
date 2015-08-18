@@ -7,18 +7,21 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using CourierSample;
     using log4net.Config;
     using MassTransit;
+    using MassTransit.AzureServiceBusTransport;
     using MassTransit.Courier;
     using MassTransit.Courier.Contracts;
     using MassTransit.Log4NetIntegration.Logging;
-    using MassTransit.RabbitMqTransport;
+    using Microsoft.ServiceBus;
+    using Microsoft.ServiceBus.Messaging;
     using Processing.Contracts;
 
 
     class Program
     {
-        static IRabbitMqHost _host;
+        static IServiceBusHost _host;
 
         static void Main()
         {
@@ -34,11 +37,11 @@
 
             string validateQueueName = ConfigurationManager.AppSettings["ValidateActivityQueue"];
 
-            Uri validateAddress = _host.Settings.GetQueueAddress(validateQueueName);
+            Uri validateAddress = _host.Settings.GetInputAddress(new QueueDescription(validateQueueName));
 
             string retrieveQueueName = ConfigurationManager.AppSettings["RetrieveActivityQueue"];
 
-            Uri retrieveAddress = _host.Settings.GetQueueAddress(retrieveQueueName);
+            Uri retrieveAddress = _host.Settings.GetInputAddress(new QueueDescription(retrieveQueueName));
 
 
             try
@@ -76,6 +79,9 @@
                             break;
                         case "2":
                             requestAddress = "http://i.imgur.com/NK8eZUe.jpg";
+                            break;
+                        case "3":
+                            requestAddress = "http://ndhaxpgit01.mckesson.com/chrispatterson/Schemacina/raw/master/README.markdown";
                             break;
                     }
 
@@ -128,15 +134,39 @@
             }
         }
 
-
         static IBusControl CreateBus()
         {
-            return Bus.Factory.CreateUsingRabbitMq(x =>
+            return Bus.Factory.CreateUsingAzureServiceBus(x =>
             {
-                _host = x.Host(new Uri(ConfigurationManager.AppSettings["RabbitMQHost"]), h =>
+                var clientUri = ServiceBusEnvironment.CreateServiceUri("sb",
+                    ConfigurationManager.AppSettings["ServiceBusNamespace"], "Client");
+
+                var host = x.Host(clientUri, h =>
                 {
-                    h.Username("guest");
-                    h.Password("guest");
+                    ServiceBusTokenProviderSettings settings = new ServiceBusAccountSettings();
+
+                    h.SharedAccessSignature(s =>
+                    {
+                        s.KeyName = settings.KeyName;
+                        s.SharedAccessKey = settings.SharedAccessKey;
+                        s.TokenTimeToLive = settings.TokenTimeToLive;
+                        s.TokenScope = settings.TokenScope;
+                    });
+                });
+
+                var serviceUri = ServiceBusEnvironment.CreateServiceUri("sb",ConfigurationManager.AppSettings["ServiceBusNamespace"], "ActivityService");
+
+                _host = x.Host(serviceUri, h =>
+                {
+                    ServiceBusTokenProviderSettings settings = new ServiceBusAccountSettings();
+
+                    h.SharedAccessSignature(s =>
+                    {
+                        s.KeyName = settings.KeyName;
+                        s.SharedAccessKey = settings.SharedAccessKey;
+                        s.TokenTimeToLive = settings.TokenTimeToLive;
+                        s.TokenScope = settings.TokenScope;
+                    });
                 });
             });
         }
@@ -146,7 +176,7 @@
             const string logConfig = @"<?xml version=""1.0"" encoding=""utf-8"" ?>
 <log4net>
   <root>
-    <level value=""INFO"" />
+    <level value=""DEBUG"" />
     <appender-ref ref=""console"" />
   </root>
   <appender name=""console"" type=""log4net.Appender.ColoredConsoleAppender"">

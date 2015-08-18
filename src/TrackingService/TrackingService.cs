@@ -3,11 +3,12 @@
     using System;
     using System.Configuration;
     using Automatonymous;
+    using CourierSample;
     using MassTransit;
+    using MassTransit.AzureServiceBusTransport;
     using MassTransit.NHibernateIntegration.Saga;
-    using MassTransit.Policies;
-    using MassTransit.RabbitMqTransport;
     using MassTransit.Saga;
+    using Microsoft.ServiceBus;
     using NHibernate;
     using Topshelf;
     using Topshelf.Logging;
@@ -41,12 +42,22 @@
 
             _repository = new NHibernateSagaRepository<RoutingSlipState>(_sessionFactory);
 
-            _busControl = Bus.Factory.CreateUsingRabbitMq(x =>
+            _busControl = Bus.Factory.CreateUsingAzureServiceBus(x =>
             {
-                IRabbitMqHost host = x.Host(new Uri(ConfigurationManager.AppSettings["RabbitMQHost"]), h =>
+                var serviceUri = ServiceBusEnvironment.CreateServiceUri("sb",
+                    ConfigurationManager.AppSettings["ServiceBusNamespace"], "TrackingService");
+
+                IServiceBusHost host = x.Host(serviceUri, h =>
                 {
-                    h.Username("guest");
-                    h.Password("guest");
+                    ServiceBusTokenProviderSettings settings = new ServiceBusAccountSettings();
+
+                    h.SharedAccessSignature(s =>
+                    {
+                        s.KeyName = settings.KeyName;
+                        s.SharedAccessKey = settings.SharedAccessKey;
+                        s.TokenTimeToLive = settings.TokenTimeToLive;
+                        s.TokenScope = settings.TokenScope;
+                    });
                 });
 
                 x.ReceiveEndpoint(host, "routing_slip_metrics", e =>
