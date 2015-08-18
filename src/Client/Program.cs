@@ -176,7 +176,7 @@
             const string logConfig = @"<?xml version=""1.0"" encoding=""utf-8"" ?>
 <log4net>
   <root>
-    <level value=""DEBUG"" />
+    <level value=""INFO"" />
     <appender-ref ref=""console"" />
   </root>
   <appender name=""console"" type=""log4net.Appender.ColoredConsoleAppender"">
