@@ -5,7 +5,6 @@
     using Automatonymous;
     using MassTransit;
     using MassTransit.NHibernateIntegration.Saga;
-    using MassTransit.Policies;
     using MassTransit.RabbitMqTransport;
     using MassTransit.Saga;
     using NHibernate;
@@ -21,7 +20,6 @@
         RoutingSlipMetrics _activityMetrics;
 
         IBusControl _busControl;
-        BusHandle _busHandle;
         RoutingSlipStateMachine _machine;
         RoutingSlipMetrics _metrics;
         SQLiteSessionFactoryProvider _provider;
@@ -73,7 +71,7 @@
 
             _log.Info("Starting bus...");
 
-            _busHandle = _busControl.Start();
+            _busControl.Start();
 
             return true;
         }
@@ -82,8 +80,7 @@
         {
             _log.Info("Stopping bus...");
 
-            if (_busHandle != null)
-                _busHandle.Stop(TimeSpan.FromSeconds(30));
+            _busControl?.Stop();
 
             return true;
         }

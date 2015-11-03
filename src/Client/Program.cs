@@ -30,7 +30,7 @@
 
             IBusControl busControl = CreateBus();
 
-            BusHandle busHandle = busControl.Start();
+            busControl.Start();
 
             string validateQueueName = ConfigurationManager.AppSettings["ValidateActivityQueue"];
 
@@ -124,7 +124,7 @@
             }
             finally
             {
-                busHandle.Stop(TimeSpan.FromSeconds(30));
+                busControl.Stop();
             }
         }
 
