@@ -47,6 +47,8 @@
                     h.Password("guest");
                 });
 
+                x.EnabledPerformanceCounters();
+
                 x.ReceiveEndpoint(host, "routing_slip_metrics", e =>
                 {
                     e.PrefetchCount = 100;
