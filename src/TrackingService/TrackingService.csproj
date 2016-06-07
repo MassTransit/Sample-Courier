@@ -53,23 +53,23 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="MassTransit, Version=3.3.1.0, Culture=neutral, PublicKeyToken=b8e0e9f2f1e657fa, processorArchitecture=MSIL">
-      <HintPath>..\packages\MassTransit.3.3.2\lib\net452\MassTransit.dll</HintPath>
+      <HintPath>..\packages\MassTransit.3.3.4\lib\net452\MassTransit.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="MassTransit.AutomatonymousIntegration, Version=3.3.1.0, Culture=neutral, PublicKeyToken=b8e0e9f2f1e657fa, processorArchitecture=MSIL">
-      <HintPath>..\packages\MassTransit.Automatonymous.3.3.2\lib\net452\MassTransit.AutomatonymousIntegration.dll</HintPath>
+      <HintPath>..\packages\MassTransit.Automatonymous.3.3.4\lib\net452\MassTransit.AutomatonymousIntegration.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="MassTransit.Log4NetIntegration, Version=3.3.1.0, Culture=neutral, PublicKeyToken=b8e0e9f2f1e657fa, processorArchitecture=MSIL">
-      <HintPath>..\packages\MassTransit.Log4Net.3.3.2\lib\net452\MassTransit.Log4NetIntegration.dll</HintPath>
+      <HintPath>..\packages\MassTransit.Log4Net.3.3.4\lib\net452\MassTransit.Log4NetIntegration.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="MassTransit.NHibernateIntegration, Version=3.3.1.0, Culture=neutral, PublicKeyToken=b8e0e9f2f1e657fa, processorArchitecture=MSIL">
-      <HintPath>..\packages\MassTransit.NHibernate.3.3.2\lib\net452\MassTransit.NHibernateIntegration.dll</HintPath>
+      <HintPath>..\packages\MassTransit.NHibernate.3.3.4\lib\net452\MassTransit.NHibernateIntegration.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="MassTransit.RabbitMqTransport, Version=3.3.1.0, Culture=neutral, PublicKeyToken=b8e0e9f2f1e657fa, processorArchitecture=MSIL">
-      <HintPath>..\packages\MassTransit.RabbitMQ.3.3.2\lib\net452\MassTransit.RabbitMqTransport.dll</HintPath>
+      <HintPath>..\packages\MassTransit.RabbitMQ.3.3.4\lib\net452\MassTransit.RabbitMqTransport.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NewId, Version=2.1.3.0, Culture=neutral, PublicKeyToken=b8e0e9f2f1e657fa, processorArchitecture=MSIL">
@@ -84,8 +84,8 @@
       <HintPath>..\packages\NHibernate.4.0.4.4000\lib\net40\NHibernate.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="RabbitMQ.Client, Version=3.6.1.0, Culture=neutral, PublicKeyToken=89e7d7c5feba84ce, processorArchitecture=MSIL">
-      <HintPath>..\packages\RabbitMQ.Client.3.6.1\lib\net45\RabbitMQ.Client.dll</HintPath>
+    <Reference Include="RabbitMQ.Client, Version=3.6.2.0, Culture=neutral, PublicKeyToken=89e7d7c5feba84ce, processorArchitecture=MSIL">
+      <HintPath>..\packages\RabbitMQ.Client.3.6.2\lib\net45\RabbitMQ.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
