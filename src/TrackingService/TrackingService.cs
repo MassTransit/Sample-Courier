@@ -22,7 +22,6 @@
         RoutingSlipMetrics _activityMetrics;
 
         IBusControl _busControl;
-        BusHandle _busHandle;
         RoutingSlipStateMachine _machine;
         RoutingSlipMetrics _metrics;
         SQLiteSessionFactoryProvider _provider;
@@ -60,6 +59,8 @@
                     });
                 });
 
+                x.EnablePerformanceCounters();
+
                 x.ReceiveEndpoint(host, "routing_slip_metrics", e =>
                 {
                     e.PrefetchCount = 100;
@@ -84,7 +85,7 @@
 
             _log.Info("Starting bus...");
 
-            _busHandle = _busControl.Start();
+            _busControl.Start();
 
             return true;
         }
@@ -93,8 +94,7 @@
         {
             _log.Info("Stopping bus...");
 
-            if (_busHandle != null)
-                _busHandle.Stop(TimeSpan.FromSeconds(30));
+            _busControl?.Stop();
 
             return true;
         }
