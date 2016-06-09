@@ -8,8 +8,8 @@ namespace CourierSample
     public class ServiceBusAccountSettings :
         ServiceBusTokenProviderSettings
     {
-        const string KeyName = "RootManageSharedAccessKey";
-        const string SharedAccessKey = "2LDrDHG5B1WtyDEGsCAOiSJJZItfhgIun1vDskHu4G4=";
+        const string KeyName = "MassTransitBuild";
+        const string SharedAccessKey = "xsvaZOKYkX8JI5N+spLCkI9iu102jLhWFJrf0LmNPMw=";
         readonly TokenScope _tokenScope;
         readonly TimeSpan _tokenTimeToLive;
 
