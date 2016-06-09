@@ -22,7 +22,6 @@
         readonly LogWriter _log = HostLogger.Get<ActivityService>();
 
         IBusControl _busControl;
-        BusHandle _busHandle;
 
         public bool Start(HostControl hostControl)
         {
@@ -53,6 +52,8 @@
                     });
                 });
 
+                x.EnablePerformanceCounters();
+
                 x.ReceiveEndpoint(host, ConfigurationManager.AppSettings["ValidateActivityQueue"], e =>
                 {
                     e.PrefetchCount = 100;
@@ -77,7 +78,7 @@
 
             _log.Info("Starting bus...");
 
-            _busHandle = _busControl.Start();
+            _busControl.Start();
 
             return true;
         }
@@ -86,8 +87,7 @@
         {
             _log.Info("Stopping bus...");
 
-            if (_busHandle != null)
-                _busHandle.Stop(TimeSpan.FromSeconds(30));
+            _busControl?.Stop();
 
             return true;
         }
