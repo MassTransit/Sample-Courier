@@ -39,8 +39,6 @@
                     h.Password("guest");
                 });
 
-                x.EnabledPerformanceCounters();
-
                 x.ReceiveEndpoint(host, ConfigurationManager.AppSettings["ValidateActivityQueue"], e =>
                 {
                     e.PrefetchCount = 100;
