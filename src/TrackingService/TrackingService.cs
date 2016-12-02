@@ -7,6 +7,7 @@
     using MassTransit.NHibernateIntegration.Saga;
     using MassTransit.RabbitMqTransport;
     using MassTransit.Saga;
+    using MassTransit.Util;
     using NHibernate;
     using Topshelf;
     using Topshelf.Logging;
@@ -71,7 +72,7 @@
 
             _log.Info("Starting bus...");
 
-            _busControl.Start();
+            TaskUtil.Await(() => _busControl.StartAsync());
 
             return true;
         }

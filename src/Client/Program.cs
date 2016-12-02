@@ -13,6 +13,7 @@
     using MassTransit.Courier.Contracts;
     using MassTransit.Log4NetIntegration.Logging;
     using MassTransit.RabbitMqTransport;
+    using MassTransit.Util;
     using Processing.Contracts;
 
 
@@ -30,15 +31,15 @@
 
             IBusControl busControl = CreateBus();
 
-            busControl.Start();
+            TaskUtil.Await(() => busControl.StartAsync());
 
             string validateQueueName = ConfigurationManager.AppSettings["ValidateActivityQueue"];
 
-            Uri validateAddress = _host.Settings.GetQueueAddress(validateQueueName);
+            Uri validateAddress = _host.GetSendAddress(validateQueueName);
 
             string retrieveQueueName = ConfigurationManager.AppSettings["RetrieveActivityQueue"];
 
-            Uri retrieveAddress = _host.Settings.GetQueueAddress(retrieveQueueName);
+            Uri retrieveAddress = _host.GetSendAddress(retrieveQueueName);
 
 
             try

@@ -7,6 +7,7 @@
     using MassTransit.Courier;
     using MassTransit.Courier.Factories;
     using MassTransit.RabbitMqTransport;
+    using MassTransit.Util;
     using Processing.Activities.Retrieve;
     using Processing.Activities.Validate;
     using Topshelf;
@@ -48,7 +49,7 @@
 
                 string compQueue = ConfigurationManager.AppSettings["CompensateRetrieveActivityQueue"];
 
-                Uri compAddress = host.Settings.GetQueueAddress(compQueue);
+                Uri compAddress = host.GetSendAddress(compQueue);
 
                 x.ReceiveEndpoint(host, ConfigurationManager.AppSettings["RetrieveActivityQueue"], e =>
                 {
@@ -63,7 +64,7 @@
 
             _log.Info("Starting bus...");
 
-            _busControl.Start();
+            TaskUtil.Await(() => _busControl.StartAsync());
 
             return true;
         }
