@@ -1,4 +1,6 @@
-﻿namespace ProcessingService
+﻿using GreenPipes;
+
+namespace ProcessingService
 {
     using System;
     using System.Configuration;
@@ -43,23 +45,22 @@
                 x.ReceiveEndpoint(host, ConfigurationManager.AppSettings["ValidateActivityQueue"], e =>
                 {
                     e.PrefetchCount = 100;
-                    e.ExecuteActivityHost<ValidateActivity, ValidateArguments>(
-                        DefaultConstructorExecuteActivityFactory<ValidateActivity, ValidateArguments>.ExecuteFactory);
+                    e.ExecuteActivityHost(
+                        DefaultConstructorExecuteActivityFactory<ValidateActivity, ValidateArguments>.ExecuteFactory, c => c.UseRetry(r => r.Immediate(5)));
                 });
 
                 string compQueue = ConfigurationManager.AppSettings["CompensateRetrieveActivityQueue"];
 
-                Uri compAddress = host.GetSendAddress(compQueue);
+                Uri compAddress = new Uri(string.Concat(ConfigurationManager.AppSettings["RabbitMQHost"], compQueue));
 
                 x.ReceiveEndpoint(host, ConfigurationManager.AppSettings["RetrieveActivityQueue"], e =>
                 {
                     e.PrefetchCount = 100;
-                    //                    e.Retry(Retry.Selected<HttpRequestException>().Interval(5, TimeSpan.FromSeconds(1)));
-                    e.ExecuteActivityHost<RetrieveActivity, RetrieveArguments>(compAddress);
+                    e.ExecuteActivityHost<RetrieveActivity, RetrieveArguments>(compAddress,  c=> c.UseRetry(r => r.Immediate(5)));
                 });
 
                 x.ReceiveEndpoint(host, ConfigurationManager.AppSettings["CompensateRetrieveActivityQueue"],
-                    e => e.CompensateActivityHost<RetrieveActivity, RetrieveLog>());
+                    e => e.CompensateActivityHost<RetrieveActivity, RetrieveLog>(c => c.UseRetry(r => r.Immediate(5))));
             });
 
             _log.Info("Starting bus...");

@@ -1,4 +1,6 @@
-﻿namespace TrackingService
+﻿using GreenPipes;
+
+namespace TrackingService
 {
     using System;
     using System.Configuration;
@@ -51,14 +53,14 @@
                 x.ReceiveEndpoint(host, "routing_slip_metrics", e =>
                 {
                     e.PrefetchCount = 100;
-                    e.UseRetry(Retry.None);
+                    e.UseRetry(r => r.None());
                     e.Consumer(() => new RoutingSlipMetricsConsumer(_metrics));
                 });
 
                 x.ReceiveEndpoint(host, "routing_slip_activity_metrics", e =>
                 {
                     e.PrefetchCount = 100;
-                    e.UseRetry(Retry.None);
+                    e.UseRetry(r => r.None());
                     e.Consumer(() => new RoutingSlipActivityConsumer(_activityMetrics, "Validate"));
                 });
 
