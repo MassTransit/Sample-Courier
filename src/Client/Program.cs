@@ -33,12 +33,13 @@
 
             TaskUtil.Await(() => busControl.StartAsync());
 
+            Uri hostAddress = busControl.Address.GetHostSettings().HostAddress;
+
             string validateQueueName = ConfigurationManager.AppSettings["ValidateActivityQueue"];
-            Uri validateAddress = new Uri(string.Concat(busControl.Address, validateQueueName));
+            Uri validateAddress = new Uri(string.Concat(hostAddress, validateQueueName));
 
             string retrieveQueueName = ConfigurationManager.AppSettings["RetrieveActivityQueue"];
-
-            Uri retrieveAddress = new Uri(string.Concat(busControl.Address, retrieveQueueName));
+            Uri retrieveAddress = new Uri(string.Concat(hostAddress, retrieveQueueName));
 
 
             try
