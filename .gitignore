@@ -11,6 +11,8 @@ Gemfile.lock
 
 src/logs/*
 
+.idea
+
 bin
 obj
 _ReSharper*

@@ -1,10 +1,9 @@
-﻿using GreenPipes;
-
+﻿
 namespace TrackingService
 {
     using System;
     using System.Configuration;
-    using Automatonymous;
+    using GreenPipes;
     using MassTransit;
     using MassTransit.NHibernateIntegration.Saga;
     using MassTransit.RabbitMqTransport;

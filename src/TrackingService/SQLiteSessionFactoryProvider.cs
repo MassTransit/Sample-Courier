@@ -1,7 +1,20 @@
-﻿namespace TrackingService
+// Copyright 2007-2014 Chris Patterson, Dru Sellers, Travis Smith, et. al.
+//  
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+// this file except in compliance with the License. You may obtain a copy of the 
+// License at 
+// 
+//     http://www.apache.org/licenses/LICENSE-2.0 
+// 
+// Unless required by applicable law or agreed to in writing, software distributed
+// under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
+// CONDITIONS OF ANY KIND, either express or implied. See the License for the 
+// specific language governing permissions and limitations under the License.
+namespace TrackingService
 {
     using System;
     using System.Data;
+    using System.Data.Common;
     using System.Data.SQLite;
     using MassTransit.NHibernateIntegration;
     using NHibernate;
@@ -11,11 +24,10 @@
     using NHibernate.Dialect;
     using NHibernate.Tool.hbm2ddl;
 
-
     /// <summary>
     /// Creates a session factory that works with SQLite, by default in memory, for testing purposes
     /// </summary>
-    class SQLiteSessionFactoryProvider :
+    public class SQLiteSessionFactoryProvider :
         NHibernateSessionFactoryProvider,
         IDisposable
     {
@@ -40,8 +52,7 @@
         {
             Configuration.SetProperty(NHibernate.Cfg.Environment.UseSecondLevelCache, "true");
             Configuration.SetProperty(NHibernate.Cfg.Environment.UseQueryCache, "true");
-            Configuration.SetProperty(NHibernate.Cfg.Environment.CacheProvider,
-                typeof(HashtableCacheProvider).AssemblyQualifiedName);
+            Configuration.SetProperty(NHibernate.Cfg.Environment.CacheProvider, typeof(HashtableCacheProvider).AssemblyQualifiedName);
         }
 
         public void Dispose()
@@ -59,6 +70,7 @@
         {
             if (_disposed)
                 return;
+
             if (disposing)
             {
                 if (_openConnection != null)
@@ -80,14 +92,14 @@
             BuildSchema(Configuration, _openConnection);
 
             _innerSessionFactory = base.GetSessionFactory();
-            _innerSessionFactory.OpenSession(_openConnection);
+            _innerSessionFactory.WithOptions().Connection(_openConnection).OpenSession();
 
             _sessionFactory = new SingleConnectionSessionFactory(_innerSessionFactory, _openConnection);
 
             return _sessionFactory;
         }
 
-        static void BuildSchema(Configuration config, IDbConnection connection)
+        static void BuildSchema(Configuration config, DbConnection connection)
         {
             new SchemaExport(config).Execute(true, true, false, connection, null);
         }
